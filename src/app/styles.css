@@ -40,3 +40,12 @@
 
 .form-success strong { display: block; font-size: 16px; }
 .inquiry .form-success p { margin: 3px 0 0; font-size: 14px; line-height: 1.5; color: #4b3865; }
+
+@media (max-width: 860px) {
+  html:has(.nav.open) {
+    overflow: hidden;
+    overscroll-behavior: none;
+    scrollbar-gutter: stable;
+  }
+  .nav.open { overscroll-behavior-y: contain; }
+}
