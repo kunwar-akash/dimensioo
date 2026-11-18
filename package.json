@@ -1,0 +1,34 @@
+{
+  "name": "dimensioo",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "next build",
+    "start": "node .next/standalone/server.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "build:worker": "opennextjs-cloudflare build",
+    "package:sites": "node scripts/package-sites.mjs"
+  },
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "lucide-react": "^1.75.0",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.17",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.6",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.164.0"
+  },
+  "private": true
+}
