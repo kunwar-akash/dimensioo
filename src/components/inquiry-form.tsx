@@ -1,24 +1,32 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
-import { ArrowUpRight } from 'lucide-react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { ArrowUpRight, Check } from 'lucide-react'
 import Link from 'next/link'
 import { services } from '../content'
 
 export function InquiryForm({ creator, available }: { creator?: boolean; available: boolean }) {
   const [status, setStatus] = useState({ state: '', message: '' })
+  const confirmation = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (status.state === 'success') confirmation.current?.scrollIntoView({ block: 'nearest' })
+  }, [status.state])
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (status.state === 'pending') return
+    if (!available || status.state === 'pending') return
     const form = event.currentTarget
     setStatus({ state: 'pending', message: 'Sending…' })
     try {
       const data = Object.fromEntries(new FormData(form))
       const response = await fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, type: creator ? 'creator' : 'contact' }) })
       const result = await response.json()
-      if (!response.ok) throw new Error(result.error)
+      if (!response.ok || result?.delivered !== true) {
+        throw new Error(result?.error || 'Unable to confirm your submission. Please try again.')
+      }
       form.reset()
-      setStatus({ state: 'success', message: creator ? 'Your application has been sent.' : 'Your inquiry has been sent.' })
+      setStatus({ state: 'success', message: '' })
     } catch (error) {
       setStatus({ state: 'error', message: error instanceof Error ? error.message : 'Unable to send. Please try again.' })
     }
@@ -48,7 +56,19 @@ export function InquiryForm({ creator, available }: { creator?: boolean; availab
     <div className="consent"><input type="checkbox" name="consent" id="privacy-consent" required /><label htmlFor="privacy-consent">I agree to the <Link href="/privacy-policy">privacy policy</Link> and consent to being contacted about this submission.</label></div>
     {!available && <p className="form-note">Online submissions are unavailable until Dimensioo connects its inquiry inbox.</p>}
     <button className="button primary" disabled={!available || status.state === 'pending'}>{status.state === 'pending' ? 'Sending…' : creator ? 'Send application' : 'Send inquiry'} <ArrowUpRight size={17} /></button>
-    <p className="form-status" role={status.state === 'error' ? 'alert' : 'status'}>{status.message}</p>
+    <div className="form-feedback" role="status" aria-atomic="true">
+      {status.state === 'pending' && <p className="form-status">{status.message}</p>}
+      {status.state === 'success' && (
+        <div className="form-success" ref={confirmation}>
+          <span className="form-success-icon" aria-hidden="true"><Check size={21} strokeWidth={2.5} /></span>
+          <div>
+            <strong>{creator ? 'Application sent' : 'Inquiry sent'}</strong>
+            <p>Thanks for reaching out to Dimensioo.</p>
+          </div>
+        </div>
+      )}
+    </div>
+    {status.state === 'error' && <p className="form-status" role="alert">{status.message}</p>}
   </form>
 }
 
