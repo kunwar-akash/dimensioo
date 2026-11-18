@@ -32,7 +32,7 @@ function Timeline({ steps }: { steps: string[][] }) {
 function ServiceList() {
   return <div className="service-list">{services.map((service, index) => {
     const Symbol = symbols[index]
-    return <Link key={service.slug} className="service-row" style={{ '--service-accent': service.color } as CSSProperties} href={`/services/${service.slug}`}>
+    return <Link key={service.slug} className="service-row" data-reveal style={{ '--service-accent': service.color } as CSSProperties} href={`/services/${service.slug}`}>
       <span className="mono">{indexed(index)}</span><div><h3>{service.name}</h3><p>{service.pitch}</p></div><Symbol className="service-visual" aria-hidden="true" strokeWidth={1} /><ArrowUpRight className="row-arrow" />
     </Link>
   })}</div>
@@ -82,7 +82,7 @@ export function Home() {
 }
 
 function InteriorHero({ label, title, copy, variant = '', action }: { label: string; title: string; copy: string; variant?: string; action?: ReactNode }) {
-  return <section className={`interior section ${variant}`}><div className="wrap interior-grid"><div><Kicker>{label}</Kicker><h1>{title}</h1></div><div className="interior-aside"><p>{copy}</p>{action}</div></div></section>
+  return <section className={`interior section ${variant}`}><div className="wrap interior-grid" data-reveal><div><Kicker>{label}</Kicker><h1>{title}</h1></div><div className="interior-aside"><p>{copy}</p>{action}</div></div></section>
 }
 
 export function About() {

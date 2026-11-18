@@ -1,0 +1,108 @@
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal].revealed {
+    animation: reveal-rise 760ms var(--reveal-delay, 0ms) var(--ease) backwards;
+  }
+
+  .project:nth-child(even),
+  .strength-grid article:nth-child(even),
+  .service-row:nth-child(even) {
+    --reveal-delay: 85ms;
+  }
+
+  .timeline li:nth-child(2) { --reveal-delay: 65ms; }
+  .timeline li:nth-child(3) { --reveal-delay: 130ms; }
+  .timeline li:nth-child(4) { --reveal-delay: 195ms; }
+  .timeline li:nth-child(5) { --reveal-delay: 260ms; }
+
+  @keyframes reveal-rise {
+    from { opacity: .24; transform: translateY(clamp(20px, 4vw, 48px)); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero h1 span {
+    animation-name: headline-unmask;
+    animation-duration: 840ms;
+  }
+
+  .hero h1 span:nth-child(2) { animation-delay: 95ms; }
+  .hero h1 span:nth-child(3) { animation-delay: 185ms; }
+
+  @keyframes headline-unmask {
+    from { opacity: 0; transform: translateY(24px); clip-path: inset(100% -12px -10px); }
+    to { opacity: 1; transform: translateY(0); clip-path: inset(-12px); }
+  }
+
+  .hero-media img { animation: hero-arrival 1150ms var(--ease) backwards; }
+
+  @keyframes hero-arrival {
+    from { opacity: .58; scale: 1.07; }
+    to { opacity: 1; scale: 1; }
+  }
+
+  .hero-end { animation: headline 650ms 360ms var(--ease) backwards; }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      position: absolute;
+      pointer-events: none;
+      inset: auto 0 -1px;
+      height: 2px;
+      background: linear-gradient(90deg, #4a71ff, #b59afe);
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: reading-progress linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    @keyframes reading-progress { to { transform: scaleX(1); } }
+  }
+
+  @media (min-width: 861px) {
+    @supports (animation-timeline: view()) {
+      .hero-media {
+        animation: hero-drift linear both;
+        animation-timeline: view(block);
+        animation-range: exit 0% exit 100%;
+      }
+
+      @keyframes hero-drift { to { transform: translateY(18%); opacity: .42; } }
+    }
+  }
+
+  @media (max-width: 860px) {
+    .nav.open { animation: menu-in 300ms var(--ease) backwards; }
+    @keyframes menu-in {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .button, .nav-cta {
+    transition: translate 300ms var(--ease), box-shadow 300ms var(--ease), background 220ms,
+      color 220ms, border-color 220ms, transform 220ms;
+  }
+
+  .button:hover:not(:disabled), .nav-cta:hover {
+    translate: 0 -3px;
+    box-shadow: 0 10px 26px #7547d23b;
+  }
+
+  .button:hover svg, .nav-cta:hover svg, .text-link:hover svg {
+    transform: translate(4px, -4px);
+  }
+
+  .nav-cta svg, .service-row h3, .service-row p, .project-caption h3 {
+    transition: transform 340ms var(--ease), color 230ms;
+  }
+
+  .service-row:hover h3 { transform: translateX(10px); color: var(--service-accent); }
+  .service-row:hover p { transform: translateX(10px); }
+  .service-row:hover .service-visual { transform: rotate(-13deg) scale(1.25); }
+  .project:hover img { transform: scale(1.10); }
+  .project:hover .project-arrow { transform: translate(-4px, -4px) rotate(12deg); }
+  .project:hover .project-caption h3 { transform: translateX(6px); color: var(--violet); }
+  .scroll svg { transition: transform 300ms var(--ease); }
+  .scroll:hover svg { transform: translateY(5px); }
+}

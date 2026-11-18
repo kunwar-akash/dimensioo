@@ -5,6 +5,7 @@ import { brand, navigation, services } from '../content'
 import { Navigation } from '../components/navigation'
 import { Reveal } from '../components/reveal'
 import './styles.css'
+import './motion.css'
 
 export const metadata: Metadata = {
   title: { default: 'Dimensioo — Think Bigger. Market Smarter.', template: '%s | Dimensioo' },
@@ -20,7 +21,7 @@ function Wordmark() {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body>
     <a className="skip" href="#content">Skip to content</a>
-    <header className="header"><div className="nav-wrap">
+    <header className="header"><div className="scroll-progress" aria-hidden="true" /><div className="nav-wrap">
       <Link href="/" className="brand-link" aria-label="Dimensioo home"><Wordmark /></Link>
       <Navigation />
       <Link className="nav-cta" href="/contact">Let’s Talk <ArrowUpRight size={15} /></Link>
