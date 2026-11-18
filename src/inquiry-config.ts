@@ -1,8 +1,10 @@
 export function inquiryConfig() {
-  const { RESEND_API_KEY, INQUIRY_FROM_EMAIL, INQUIRY_TO_EMAIL } = process.env
-  return { apiKey: RESEND_API_KEY, from: INQUIRY_FROM_EMAIL, to: INQUIRY_TO_EMAIL }
+  const { WEB3FORMS_ACCESS_KEY, RESEND_API_KEY, INQUIRY_FROM_EMAIL, INQUIRY_TO_EMAIL } = process.env
+  if (WEB3FORMS_ACCESS_KEY?.trim()) return { provider: 'web3forms' as const, accessKey: WEB3FORMS_ACCESS_KEY.trim() }
+  if (RESEND_API_KEY && INQUIRY_FROM_EMAIL && INQUIRY_TO_EMAIL) {
+    return { provider: 'resend' as const, apiKey: RESEND_API_KEY, from: INQUIRY_FROM_EMAIL, to: INQUIRY_TO_EMAIL }
+  }
 }
 export function inquiryAvailable() {
-  const { apiKey, from, to } = inquiryConfig()
-  return Boolean(apiKey && from && to)
+  return Boolean(inquiryConfig())
 }

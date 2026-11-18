@@ -25,7 +25,9 @@ Open http://localhost:3000. Use `npm run lint`, `npm run typecheck`, and `npm ru
 
 ## Enable inquiries and creator applications
 
-Set `RESEND_API_KEY`, `INQUIRY_FROM_EMAIL`, and `INQUIRY_TO_EMAIL` in the server runtime. Verify the sender domain in Resend, then test both forms with the real inbox. The API validates submissions on the server, checks request origin, rejects the honeypot, limits request size, and deduplicates repeat provider requests. The forms display the unavailable state when delivery is unconfigured. A success response requires an email provider receipt.
+Set `WEB3FORMS_ACCESS_KEY` as a server secret to send contact inquiries and creator applications to the inbox linked to that key. Alternatively, set `RESEND_API_KEY`, `INQUIRY_FROM_EMAIL`, and `INQUIRY_TO_EMAIL` with a verified Resend sender. Web3Forms takes precedence when both are configured.
+
+The API validates submissions, checks the request origin, rejects the honeypot, and limits the request size. Forms show an unavailable state when no provider is configured. A success response requires acceptance by the configured provider. After configuring the inbox, verify delivery with a test submission.
 
 ## Deploy
 

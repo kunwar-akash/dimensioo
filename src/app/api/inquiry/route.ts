@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createHash } from 'node:crypto'
-import { inquiryAvailable, inquiryConfig } from '../../../inquiry-config'
+import { inquiryConfig } from '../../../inquiry-config'
 
 const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const failure = (error: string, status: number) => NextResponse.json({ error }, { status })
@@ -66,17 +66,39 @@ export async function POST(request: Request) {
       return failure('Social links must be valid web URLs.', 422)
     }
   }
-  if (!inquiryAvailable()) return failure('Online submissions are currently unavailable.', 503)
+  const config = inquiryConfig()
+  if (!config) return failure('Online submissions are currently unavailable.', 503)
 
-  const { apiKey, from, to } = inquiryConfig()
-  const text = fields.filter(key => values[key]).map(key => `${key}: ${values[key]}`).join('\n\n')
-  const idempotencyKey = createHash('sha256').update(JSON.stringify([creator, values])).digest('hex')
+  const subject = creator ? 'New Dimensioo creator application' : 'New Dimensioo business inquiry'
+  const signal = AbortSignal.timeout(8000)
   try {
+    if (config.provider === 'web3forms') {
+      const sent = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          ...values,
+          access_key: config.accessKey,
+          subject,
+          from_name: 'Dimensioo website',
+          replyto: values.email,
+        }),
+        signal,
+      })
+      if (sent.status === 429) return failure('The inbox is busy. Please try again shortly.', 429)
+      if (!sent.ok || (await sent.json()).success !== true) {
+        return failure('We couldn’t send your message. Please try again.', 502)
+      }
+      return NextResponse.json({ delivered: true })
+    }
+
+    const text = fields.filter(key => values[key]).map(key => `${key}: ${values[key]}`).join('\n\n')
+    const idempotencyKey = createHash('sha256').update(JSON.stringify([creator, values])).digest('hex')
     const sent = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
-      body: JSON.stringify({ from, to: [to], reply_to: values.email, subject: creator ? 'New Dimensioo creator application' : 'New Dimensioo business inquiry', text }),
-      signal: AbortSignal.timeout(8000),
+      headers: { Authorization: `Bearer ${config.apiKey}`, 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
+      body: JSON.stringify({ from: config.from, to: [config.to], reply_to: values.email, subject, text }),
+      signal,
     })
     if (!sent.ok) {
       if (sent.status === 429) return failure('The inbox is busy. Please try again shortly.', 429)
