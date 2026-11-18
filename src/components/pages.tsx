@@ -134,7 +134,7 @@ export function Work() {
 export function ProjectDetail({ project }: { project: typeof projects[number] }) {
   return <>
     <InteriorHero label={`Concept Project / ${project.category}`} title={project.name} copy={project.type} variant="dark project-hero" />
-    <figure className={`case-image project-${project.image}`}><Image src={`/assets/project-${project.image}.webp`} alt={project.alt} fill sizes="100vw" priority /></figure>
+    <figure className={`case-image project-${project.slug}`}><Image src={project.cover} alt={project.alt} fill sizes="100vw" priority /></figure>
     <section className="section paper"><div className="wrap split"><div><Kicker>Concept overview</Kicker><h2>The creative challenge.</h2></div><div className="prose"><p>{project.challenge}</p><h3>Proposed approach</h3><p>{project.strategy}</p><h3>Creative execution</h3><p>{project.execution}</p><h3>Intended outcomes</h3><p>{project.outcome}</p>{project.verifiedResults && <><h3>Verified results</h3><p>{project.verifiedResults}</p></>}</div></div></section>
     {!!project.gallery?.length && <section className="section paper"><div className="wrap"><Kicker>Project gallery</Kicker><div className="project-grid">{project.gallery.map(image => <figure key={image.src} className="project-image"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 610px) 100vw, 50vw" /></figure>)}</div></div></section>}
     <section className="section selected"><div className="wrap"><Kicker>Related work</Kicker><div className="project-grid">{projects.filter(item => item.slug !== project.slug).slice(0, 2).map(item => <ProjectCard key={item.slug} project={item} />)}</div></div></section>

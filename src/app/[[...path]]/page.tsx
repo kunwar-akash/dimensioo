@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: RouteProps): Promise<Metadata
   const description = service?.pitch || project?.challenge || page?.[1]
   if (!title || !description) return { title: 'Page not found', robots: { index: false } }
   const url = brand.url ? new URL('/' + route, brand.url).href : undefined
-  const image = brand.url ? new URL(project ? `/assets/project-${project.image}.webp` : '/assets/hero.webp', brand.url).href : undefined
+  const image = brand.url ? new URL(project ? project.cover : '/assets/hero.webp', brand.url).href : undefined
   return {
     title: route ? title : { absolute: title }, description,
     alternates: url ? { canonical: url } : undefined,

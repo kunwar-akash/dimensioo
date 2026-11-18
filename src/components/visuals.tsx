@@ -5,7 +5,7 @@ import { projects, type Profile } from '../content'
 
 export function ProjectCard({ project }: { project: typeof projects[number] }) {
   return <Link className="project" data-reveal href={`/work/${project.slug}`}>
-    <div className={`project-image project-${project.image}`}><Image src={`/assets/project-${project.image}.webp`} alt={project.alt} fill sizes="(max-width: 700px) 100vw, 50vw" /><span className="project-tag">Concept Project</span><span className="project-arrow"><ArrowUpRight /></span></div>
+    <div className={`project-image project-${project.slug}`}><Image src={project.cover} alt={project.alt} fill sizes="(max-width: 700px) 100vw, 50vw" /><span className="project-tag">Concept Project</span><span className="project-arrow"><ArrowUpRight /></span></div>
     <div className="project-caption"><h3>{project.name}</h3><p>{project.category} / {project.type}</p></div>
   </Link>
 }
